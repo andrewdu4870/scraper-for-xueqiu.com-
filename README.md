@@ -6,3 +6,5 @@ scraper_mongodb.py 和 scraper_json.py 都爬取评论区数据，区别是保�
 numbers_scraper.py 爬取股票的价格信息，保存在mongodb中
 
 同目录下还需一个cookie.txt文件，里面是自己的cookie数据
+
+详细教程在https://zhuanlan.zhihu.com/p/459314436
