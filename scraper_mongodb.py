@@ -78,6 +78,7 @@ def scrape_symbol(symbol):
 
 def save_data_mongodb(index_data):
   # 输入为一页十条评论，分别保存
+  about = index_data.get('about')
   for comment_data in index_data.get('list'):
     # 先处理时间格式
     if 'timeBefore' in comment_data.keys():
@@ -90,6 +91,7 @@ def save_data_mongodb(index_data):
     
     # 提取需要的信息
     result_data = {key:value for key,value in comment_data.items() if key in keys }
+    result_data['symbol'] = about
     #保存
     collection.insert_one(result_data)
 
