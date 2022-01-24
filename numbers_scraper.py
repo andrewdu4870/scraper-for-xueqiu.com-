@@ -6,7 +6,7 @@ from datetime import timedelta
 #from tqdm.notebook import tqdm #如果用jupyter则从这里导入
 from tqdm import tqdm
 import pymongo
-import datetime, time
+import time
 
 # 不可更改部分
 logging.basicConfig(level=logging.INFO,
@@ -17,7 +17,7 @@ client = pymongo.MongoClient(host='localhost',port=27017)
 db = client.test
 #db.list_collection_names() #查看已有的集合
 db.list_collection_names()
-collection = db.comments
+collection = db.data
 
 # 可更改部分
 years = 3 # 选取数据的时间跨度，整数
@@ -29,9 +29,9 @@ eduSHcode=['SH600880','SZ002261','SZ300282',
 'SZ300089','SZ000526'] # 股票代码
 
 # 时间戳
-now = datetime.datetime.now()
-end = int(time.mktime(now.timetuple()))*1000 # *1000 是从毫秒变微妙
-three_years_ago = now - datetime.timedelta(days=365*years)
+now = datetime.now()
+end = int(time.mktime(now.timetuple()))*1000 # *1000 是从秒变毫秒
+three_years_ago = now - timedelta(days=365*years)
 begin = int(time.mktime(three_years_ago.timetuple()))*1000
 
 
