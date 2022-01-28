@@ -10,12 +10,11 @@ import pymongo
 # 不可更改部分
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s: %(message)s')
-INDEX_URL = 'https://xueqiu.com/query/v1/symbol/search/status.json?count=10&comment=0&symbol={symbol}&hl=0&source=all&sort={sort}&page={page}&q=&type=11'
+INDEX_URL = 'https://xueqiu.com/query/v1/symbol/search/status.json?count=10&comment=0&symbol={symbol}&hl=0&source=user&sort={sort}&page={page}&q=&type=11'
 client = pymongo.MongoClient(host='localhost',port=27017)
 #client.list_database_names() #查看已有的数据库
 db = client.test
 #db.list_collection_names() #查看已有的集合
-db.list_collection_names()
 collection = db.comments
 
 # 可更改部分
@@ -29,7 +28,7 @@ eduSHcode=['SH600880','SZ002261','SZ300282',
 'SZ300089','SZ000526'] # 股票代码
 keys = {'fav_count','hot','id','like_count',
 'text','timeBefore','view_count','user_id'} # 需要的数据类型
-maxPage=10 # 最大为100
+maxPage=100 # 最大为100
 
 
 def make_headers(cookie_path='cookie.txt'):
@@ -74,6 +73,8 @@ def scrape_symbol(symbol):
   for page in tqdm(range(1, maxPage + 1), desc='Page',leave=False):
     url = INDEX_URL.format(symbol=symbol, page=page, sort=sort) # 将url中空缺的信息填上
     index_data = scrape_api(url)
+    if index_data['list'] == []:
+      return
     save_data_mongodb(index_data)
 
 def save_data_mongodb(index_data):
@@ -125,4 +126,4 @@ def main():
   print('OK')
 
 if __name__ == '__main__':
-    main()
+  main()

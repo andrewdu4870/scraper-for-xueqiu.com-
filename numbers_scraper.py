@@ -16,8 +16,8 @@ client = pymongo.MongoClient(host='localhost',port=27017)
 #client.list_database_names() #查看已有的数据库
 db = client.test
 #db.list_collection_names() #查看已有的集合
-db.list_collection_names()
 collection = db.data
+ua = UserAgent()
 
 # 可更改部分
 years = 3 # 选取数据的时间跨度，整数
@@ -37,9 +37,8 @@ begin = int(time.mktime(three_years_ago.timetuple()))*1000
 
 def make_headers(cookie_path='cookie.txt'):
   # 生成HTML请求头
-  ua = UserAgent()
   headers = {
-  'user-Agent':ua.random,
+  'user-Agent':ua.edge,
   'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
   'accept-encoding': 'gzip, deflate, br',
   'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
@@ -49,8 +48,8 @@ def make_headers(cookie_path='cookie.txt'):
   'sec-ch-ua-mobile': '?0',
   'sec-ch-ua-platform': '"Windows"',
   'sec-fetch-dest': 'document',
-  'sec-fetch-mode': 'navigate',
-  'sec-fetch-site': 'none',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'same-site',
   'sec-fetch-user': '?1',
   'upgrade-insecure-requests': '1'
   }
@@ -59,11 +58,9 @@ def make_headers(cookie_path='cookie.txt'):
     headers['cookie'] = cookie
   return(headers)
 
-# 生成HTML请求头
-headers = make_headers()
-
 def scrape_api(url):
   # 根据url爬取网页，是最基础的函数
+  headers = make_headers() # 生成HTML请求头
   try:
     response = requests.get(url,headers=headers)
     if response.status_code == 200:
@@ -78,11 +75,13 @@ def scrape_num_symbol(symbol):
   return index_data
 
 def save_numdata_mongodb(index_data):
+  about = index_data['data']['symbol']
   keys = index_data['data']['column']
   pbar = tqdm(index_data['data']['item'],leave=False)
   for data in pbar:
     pbar.set_description('saving timestamp '+str(data[0]))
     result_data = dict(zip(keys,data))
+    result_data['symbol'] = about
     collection.insert_one(result_data)
 
 def main():
@@ -94,4 +93,4 @@ def main():
   print('OK')
 
 if __name__ == '__main__':
-    main()
+  main()
