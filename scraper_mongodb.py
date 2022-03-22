@@ -1,5 +1,6 @@
 import requests
 import logging
+import time
 from fake_useragent import UserAgent
 from datetime import datetime
 from datetime import timedelta
@@ -20,12 +21,19 @@ collection = db.comments
 # 可更改部分
 sort = 'time' # 时间排序
 #sort = 'alpha'# 热度排序
-eduSHcode=['SH600880','SZ002261','SZ300282',
-'SZ300359','SZ300010','SZ300192','SZ002659',
-'SH600636','SZ300688','SZ300338','SH603377',
-'SZ002621','SH605098','SZ003032','SZ002841',
-'SH600661','SH600730','SZ002638','SZ002607',
-'SZ300089','SZ000526'] # 股票代码
+#eduSHcode=['SH600880','SZ002261','SZ300282',
+#'SZ300359','SZ300010','SZ300192','SZ002659',
+#'SH600636','SZ300688','SZ300338','SH603377',
+#'SZ002621','SH605098','SZ003032','SZ002841',
+#'SH600661','SH600730','SZ002638','SZ002607',
+#'SZ300089','SZ000526'] # 股票代码
+
+#with open('symbols.txt','r') as f:
+#  eduSHcode = f.readlines()
+#  eduSHcode = [line.rstrip('\n') for line in eduSHcode]
+eduSHcode=['SZ300282','SZ300359','SZ002659','SH600636','SH600661','SH600730','SZ002638']
+
+
 keys = {'fav_count','hot','id','like_count',
 'text','timeBefore','view_count','user_id'} # 需要的数据类型
 maxPage=100 # 最大为100
@@ -76,6 +84,7 @@ def scrape_symbol(symbol):
     if index_data['list'] == []:
       return
     save_data_mongodb(index_data)
+    time.sleep(0.1)
 
 def save_data_mongodb(index_data):
   # 输入为一页十条评论，分别保存
@@ -116,7 +125,7 @@ def parse_time(thetime):
       rst = str(date_now.year) + '-' + thetime
   else:
       rst = thetime
-  return rst
+  return rst[0:10]
 
 def main():
   pbar = tqdm(eduSHcode) # 进度条

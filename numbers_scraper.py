@@ -28,6 +28,11 @@ eduSHcode=['SH600880','SZ002261','SZ300282',
 'SH600661','SH600730','SZ002638','SZ002607',
 'SZ300089','SZ000526'] # 股票代码
 
+#with open('symbols.txt','r') as f:
+#  eduSHcode = f.readlines()
+#  eduSHcode = [line.rstrip('\n') for line in eduSHcode]
+
+
 # 时间戳
 now = datetime.now()
 end = int(time.mktime(now.timetuple()))*1000 # *1000 是从秒变毫秒
@@ -82,6 +87,7 @@ def save_numdata_mongodb(index_data):
     pbar.set_description('saving timestamp '+str(data[0]))
     result_data = dict(zip(keys,data))
     result_data['symbol'] = about
+    result_data['timestamp'] = time.strftime('%Y-%m-%d', time.localtime(result_data['timestamp']/1000))
     collection.insert_one(result_data)
 
 def main():

@@ -12,7 +12,7 @@ from tqdm import tqdm
 # 不可更改部分
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s: %(message)s')
-INDEX_URL = 'https://xueqiu.com/query/v1/symbol/search/status.json?count=10&comment=0&symbol={symbol}&hl=0&source=all&sort=&page={page}&q=&type=11'
+INDEX_URL = 'https://xueqiu.com/query/v1/symbol/search/status.json?count=10&comment=0&symbol={symbol}&hl=0&source=user&sort=&page={page}&q=&type=11'
 RESULTS_DIR = 'results'
 exists(RESULTS_DIR) or makedirs(RESULTS_DIR)
 
